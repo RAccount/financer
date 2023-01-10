@@ -138,34 +138,28 @@ getAllEDGAR = function(ticker)
   ALL
 }
 
-df = getAllEDGAR(ticker="ML")
+df = getAllEDGAR(ticker="TSLA")
 
 
 ```
 
 
-```{r analysis}
-library("sqldf")
-library("ggplot2")
-apple_cash=sqldf("select val cash, end year, desc, fy fy from df where desc like '%Cash%' and form='10-Q' order by end")
 
 
 
-ggplot(data=apple_cash,mapping = aes(x=year,y=cash, group=1, label=fy)) + 
-  geom_line(color="blue") + 
-  geom_point(color="red") + 
-  geom_text(hjust=0, vjust=0)
+```{r readtaxonomy}
+library(readxl)
 
-```
+taxonomy = read_xlsx("./taxonomy/GAAP_Taxonomy_2022.xlsx")
+presentation = read_xlsx("./taxonomy/GAAP_Taxonomy_2022.xlsx", "Presentation")
 
+ledger_entries <- sqldf("select t.balance, d.*, t.type, t.periodType  from taxonomy t inner join df d on t.name = d.desc ")
+income_statement <- "124100 - Statement - Statement of Income"
+income_statement_keys <- sqldf("select * from presentation where definition = '124100 - Statement - Statement of Income'")
+income_statement_ledger_entries <- sqldf("select le.*, isk.label, isk.parent from ledger_entries le inner join income_statement_keys isk on isk.name = le.desc  ")
 
-```{r balancesheet}
+is_2022 <- sqldf("select * from income_statement_ledger_entries where fy=2021 and form='10-K'")
 
-generate_balance_sheet <- function(all) {
-  cash <- 
-  
-  
-}
 
 
 ```
