@@ -1,25 +1,14 @@
----
-title: "TestMarkdown"
-output: html_document
-date: "2023-01-03"
----
+install.packages("jsonlite")
+install.packages("data.table")
+install.packages("httr")
+install.packages("pbapply")
+install.packages("stringr")
+install.packages("plyr")
+install.packages("sqldf")
+install.packages("devtools")
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-options(scipen=999)
-
-```
-
-```{r fetch}
-require("jsonlite")
-require("data.table")
-require("httr")
-require("pbapply")
-require("stringr")
-require("plyr")
-library("sqldf")
 # assign user agent
-PASS <- new.env()
+PASS <- httr::new.env()
 assign("usrAgent", "companyname.com email@companyName.com", env = PASS)
 INFO <- read_json("https://www.sec.gov/files/company_tickers.json")
 INFO <- rbindlist(INFO)
@@ -138,63 +127,6 @@ getAllEDGAR = function(ticker)
   ALL
 }
 
-
-
-
-```
-
-
-``` {r functions}
-
-
-income_statement <- "124100 - Statement - Statement of Income"
-balance_sheet <- "104000 - Statement - Statement of Financial Position, Classified"
- cash_flow_statement <- "152200 - Statement - Statement of Cash Flows"
- 
- stockholder_equity_statement <- "148600 - Statement - Statement of Shareholders' Equity"
-
-get_balance_sheet <- function(stock, form, fp, fy ){ 
-  
-  financial_statement(stock,balance_sheet,form, fp, fy)
-  
-  
-  }
-
-get_income_statement <- function(stock, form, fp, fy ){ 
-  
-  financial_statement(stock, income_statement,form, fp, fy)
-  
-}
-
-get_statement_of_cashflows <- function(stock, form, fp, fy ){ 
-  
-  financial_statement(stock,cash_flow_statement,form, fp, fy)
-  
-}
-
-get_stockholder_equity_statement <- function(stock, form, fp, fy ){ 
-  
-  financial_statement(stock,stockholder_equity_statement,form, fp, fy)
-  
-}
-incomes <- get_income_statement("", "10-Q", "Q2", "2013")
-income <- incomes$
-for (x in 2014:2019) {
-  rbind(incomes, get_income_statement("AAPL", "10-Q", "Q2", sprintf("%s",x)))
-}
-
-
-income <- get_income_statement("AAPL", "10-Q", "Q2", "2021")
-#cashflows <- get_statement_of_cashflows("AAPL", "10-Q", "Q2", "2022")
-
-
-
-
-```
-
-
-
-```{r readtaxonomy}
 library(readxl)
 
 
@@ -202,47 +134,29 @@ library(readxl)
 
 
 financial_statement <- function (stock, key, form, fp, fy) {
+  ls()
   taxonomy <- read_xlsx("./taxonomy/GAAP_Taxonomy_2022.xlsx")
-presentation <- read_xlsx("./taxonomy/GAAP_Taxonomy_2022.xlsx", "Presentation")
+  # presentation <- read_xlsx("../../taxonomy/GAAP_Taxonomy_2022.xlsx", "Presentation")
   df <- getAllEDGAR(ticker=stock)
   entries <- sqldf(sprintf("select * from df where fy='%s' and form='%s'", fy,form))
-
-
-
-ledger_entries <- sqldf("select t.balance, d.*, t.type, t.periodType  from taxonomy t inner join df d on t.name = d.desc  order by desc ")
-
-financial_statement_keys <- sqldf(sprintf("select * from presentation where definition = '%s'",key))
-fs_ledger_entries <- sqldf("select le.*, fsk.label, fsk.parent from ledger_entries le inner join financial_statement_keys fsk on fsk.name = le.desc order by fsk.name")
-
-is_2022 <- sqldf(sprintf("select max(balance) action, max(label) label,  max(val) value, max(fy) `fiscal year`,  max(start) start, max(parent), max(end) end , desc  from fs_ledger_entries where fp='%s' and form='%s' and fy='%s' group by desc", fp, form, fy))
-#is_2022 <- sqldf(sprintf("select *  from fs_ledger_entries where fp='%s' and form='%s' and fy='%s' ", fp, form, fy))
+  
+  
+  
+  ledger_entries <- sqldf("select t.balance, d.*, t.type, t.periodType  from taxonomy t inner join df d on t.name = d.desc  order by desc ")
+  
+  financial_statement_keys <- sqldf(sprintf("select * from presentation where definition = '%s'",key))
+  fs_ledger_entries <- sqldf("select le.*, fsk.label, fsk.parent from ledger_entries le inner join financial_statement_keys fsk on fsk.name = le.desc order by fsk.name")
+  
+  is_2022 <- sqldf(sprintf("select max(balance) action, max(label) label,  max(val) value, max(fy) `fiscal year`,  max(start) start, max(parent), max(end) end , desc  from fs_ledger_entries where fp='%s' and form='%s' and fy='%s' group by desc", fp, form, fy))
+  #is_2022 <- sqldf(sprintf("select *  from fs_ledger_entries where fp='%s' and form='%s' and fy='%s' ", fp, form, fy))
   
 }
 
 
-
-
-
-```
-
-```{r package}
-library(data.tree)
-
-
-financial_statement_keys <- sqldf(sprintf("select prefix||':'||name node,parent, label, name from presentation where definition = '%s' and parent !='NA'","124100 - Statement - Statement of Income" ))
-
-  fsk_join <- sqldf("select fsk.node, fsk.parent, st.* from financial_statement_keys fsk left join is_2021 st on fsk.name = st.desc")
-  data.tree <- FromDataFrameNetwork(fsk_join)
-  print(data.tree, "label", "value")
+#' @export
+get_income_statement <- function(stock, form, fp, fy ){ 
   
-tree  <- ToDataFrameTree(data.tree, "label" , "value")
+  financial_statement(stock, income_statement,form, fp, fy)
+  
+}
 
-print(tree)
-#plot(financial_statement_keys)
-
-```
-
-``` {r pack}
-devtools::create("financer")
-
-```
