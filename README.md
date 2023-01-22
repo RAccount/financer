@@ -4,7 +4,6 @@ Welcome to the financial analysis package, a set of functions written in R for a
 
 ## Introduction
 
-
 Financial statement analysis is an important aspect of understanding the financial performance and health of a company. One important source of financial information for publicly traded companies is the Securities and Exchange Commission's EDGAR system, which stands for Electronic Data Gathering, Analysis, and Retrieval. The EDGAR system provides a wealth of financial information in the form of financial statements filed by publicly traded companies. However, the process of analyzing this information can be time-consuming and difficult, especially when done manually. This is where an R package for analyzing financial statements from SEC-Edgar can be extremely useful.
 
 ### Background:
@@ -15,16 +14,9 @@ R is a popular programming language for data analysis and statistics, and it has
 
 The purpose of a new R package for analyzing financial statements from SEC-Edgar would be to make it easier for analysts and researchers to access, download, and analyze financial information from the EDGAR system. The package would provide a set of tools for:
 
-Retrieving financial statements from SEC-Edgar in a programmatic manner
-Parsing and cleaning the financial statement data into simple data structures 
-Providing useful financial metrics and ratios such as profitability, liquidity and solvency.
-Visualizing the financial statement data in an interactive way.
-
-
-
+Retrieving financial statements from SEC-Edgar in a programmatic manner Parsing and cleaning the financial statement data into simple data structures Providing useful financial metrics and ratios such as profitability, liquidity and solvency. Visualizing the financial statement data in an interactive way.
 
 ## Installation
-
 
 To install the financial analysis package, you will need to have the devtools package installed. If you do not have devtools installed, you can install it by running the following command:
 
@@ -54,9 +46,9 @@ Here is a list of the functions included in the financial analysis package:
 
 -   `get_income_statement`: This function imports the income statement of the equity from the 10-Q.
 
--   `get_statement_of_cashflows`: TThis function imports the cashflow sheet of the equity from the 10-Q.
+-   `get_statement_of_cashflows`: This function imports the cashflow statement of the equity from the 10-Q.
 
--   `get_stockholder_equity_statement`: This function imports the balance sheet of the equity from the 10-Q.
+-   `get_stockholder_equity_statement`: This function imports the statement of stockholder's equity of the equity from the 10-Q.
 
 ## Contributions
 
