@@ -39,7 +39,9 @@ getAllEDGAR = function(ticker)
   # get CIK # for ticker
   CIK = getCIK(ticker)
   # get data by passing in url & headers
-  pg <- GET(url = paste0("https://data.sec.gov/api/xbrl/companyfacts/CIK",CIK,".json"),
+  url <- paste0("https://data.sec.gov/api/xbrl/companyfacts/CIK",CIK,".json")
+  print(url)
+  pg <- GET(url = url,
             config = httr::add_headers(`User-Agent` = PASS$usrAgent,
                                        `Accept-Encoding` = 'gzip, deflate'))
   
@@ -139,7 +141,7 @@ getAllEDGAR = function(ticker)
 }
 
 
-
+is <- getAllEDGAR("AAPL")
 
 ```
 
@@ -177,17 +179,6 @@ get_stockholder_equity_statement <- function(stock, form, fp, fy ){
   financial_statement(stock,stockholder_equity_statement,form, fp, fy)
   
 }
-incomes <- get_income_statement("", "10-Q", "Q2", "2013")
-income <- incomes$
-for (x in 2014:2019) {
-  rbind(incomes, get_income_statement("AAPL", "10-Q", "Q2", sprintf("%s",x)))
-}
-
-
-income <- get_income_statement("AAPL", "10-Q", "Q2", "2021")
-#cashflows <- get_statement_of_cashflows("AAPL", "10-Q", "Q2", "2022")
-
-
 
 
 ```
@@ -225,6 +216,69 @@ is_2022 <- sqldf(sprintf("select max(balance) action, max(label) label,  max(val
 
 ```
 
+
+```{r printkeys}
+library (tidyr)
+
+
+mark_tree <- function (taxonomy, key){ 
+  print(sprintf("key is: %s", key))
+  
+  
+
+  parent_node_string <- taxonomy[taxonomy$name==key,"parent"]
+  print(parent_node_string)
+
+  
+  if(is.na(parent_node_string)) {
+    print("reached")
+    
+  }
+  else {
+    parent_node <- strsplit(parent_node_string, ":")
+    print ("parent_node: ")
+    print (parent_node[[1]][2])
+   mark_tree(taxonomy, parent_node[[1]][2])
+    
+  }
+  
+}
+for(i in is["desc"]){
+  mark_tree(income_statement_keys, i)
+}
+
+
+
+```
+
+
+```{r test}
+
+#is <- get_income_statement("AAPL", "10-Q", "Q2", "2021")
+# 
+
+
+
+rec <- function (no){ 
+print(no)
+  if(no == 0)
+return()
+
+
+rec(no-1)
+ }
+
+rec(5)
+rec(5)
+
+rec(5)
+rec(5)
+
+rec(5)
+rec(5)
+```
+
+
 ```{r package}
 library(data.tree)
 
@@ -243,6 +297,10 @@ print(tree)
 ```
 
 ``` {r pack}
-devtools::create("financer")
+```
 
+
+``` {r pack}
+#devtools::create("financer")
+devtools::document("financer")
 ```

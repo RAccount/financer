@@ -11,10 +11,9 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
-  data.table,
 	jsonlite,
 	httr,
-	pbapply,
-	stringr,
-	plyr,
-	sqldf
+	sqldf,
+	stringr, 
+	pbapply, 
+	plyr
