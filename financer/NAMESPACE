@@ -3,6 +3,7 @@
 export(get_balance_sheet)
 export(get_income_statement)
 export(get_statement_of_cashflows)
+import(data.table)
 import(httr)
 import(jsonlite)
 import(openxlsx)

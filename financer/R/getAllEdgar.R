@@ -1,5 +1,5 @@
 
-#' @import jsonlite httr stringr sqldf pbapply plyr
+#' @import jsonlite httr stringr sqldf pbapply plyr data.table
 getAllEdgar <- function(ticker)
 {
   # get CIK # for ticker

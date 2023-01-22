@@ -17,4 +17,5 @@ Imports:
 	stringr, 
 	pbapply, 
 	plyr,
-	openxlsx
+	openxlsx,
+	data.table
