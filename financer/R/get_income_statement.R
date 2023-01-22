@@ -9,7 +9,7 @@ stockholder_equity_statement <- "148600 - Statement - Statement of Shareholders'
 
 
 #' @export
-get_income_statement <- function(stock, form, fp, fy ){
+get_income_statement <- function(stock, fy, form="10-K", fp="FY" ){
 
   financial_statement(stock, income_statement,form, fp, fy)
 

@@ -8,7 +8,7 @@ stockholder_equity_statement <- "148600 - Statement - Statement of Shareholders'
 
 
 #' @export
-get_balance_sheet <- function(stock, form, fp, fy ){ 
+get_balance_sheet <- function(stock, fy, form="10-K", fp="FY" ){ 
   
   financial_statement(stock,balance_sheet,form, fp, fy)
   
