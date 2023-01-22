@@ -16,4 +16,5 @@ Imports:
 	sqldf,
 	stringr, 
 	pbapply, 
-	plyr
+	plyr,
+	openxlsx

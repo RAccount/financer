@@ -1,16 +1,11 @@
 
-#' @import jsonlite httr stringr sqldf pbapply plyr
-
-#' @export
-
-
-
-
-
+#' @import jsonlite httr stringr sqldf pbapply plyr openxlsx
 financial_statement <- function (stock, key, form, fp, fy) {
-  taxonomy <- read_xlsx("./taxonomy/GAAP_Taxonomy_2022.xlsx")
-  presentation <- read_xlsx("./taxonomy/GAAP_Taxonomy_2022.xlsx", "Presentation")
-  df <- getAllEDGAR(ticker=stock)
+  
+  url <- "https://github.com/RStonks/Taxonomy/raw/main/taxonomy/taxonomy.xlsx"
+  taxonomy <- read.xlsx(url)
+  presentation <- read.xlsx(url, "Presentation")
+  df <- getAllEdgar(ticker=stock)
   entries <- sqldf(sprintf("select * from df where fy='%s' and form='%s'", fy,form))
   
   
@@ -21,8 +16,7 @@ financial_statement <- function (stock, key, form, fp, fy) {
   fs_ledger_entries <- sqldf("select le.*, fsk.label, fsk.parent from ledger_entries le inner join financial_statement_keys fsk on fsk.name = le.desc order by fsk.name")
   
   is_2022 <- sqldf(sprintf("select max(balance) action, max(label) label,  max(val) value, max(fy) `fiscal year`,  max(start) start, max(parent), max(end) end , desc  from fs_ledger_entries where fp='%s' and form='%s' and fy='%s' group by desc", fp, form, fy))
-  #is_2022 <- sqldf(sprintf("select *  from fs_ledger_entries where fp='%s' and form='%s' and fy='%s' ", fp, form, fy))
-  
+
 }
 
 

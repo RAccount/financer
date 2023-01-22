@@ -1,7 +1,5 @@
 
 #' @import jsonlite httr stringr sqldf pbapply plyr
-
-#' @export
 getAllEdgar <- function(ticker)
 {
   # get CIK # for ticker

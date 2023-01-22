@@ -186,15 +186,14 @@ get_stockholder_equity_statement <- function(stock, form, fp, fy ){
 
 
 ```{r readtaxonomy}
-library(readxl)
-
-
+library(openxlsx)
 
 
 
 financial_statement <- function (stock, key, form, fp, fy) {
-  taxonomy <- read_xlsx("./taxonomy/GAAP_Taxonomy_2022.xlsx")
-presentation <- read_xlsx("./taxonomy/GAAP_Taxonomy_2022.xlsx", "Presentation")
+url <- "https://github.com/RStonks/Taxonomy/raw/main/taxonomy/taxonomy.xlsx"
+    taxonomy <- read.xlsx(url)
+presentation <- read.xlsx(url, "Presentation")
   df <- getAllEDGAR(ticker=stock)
   entries <- sqldf(sprintf("select * from df where fy='%s' and form='%s'", fy,form))
 
@@ -253,10 +252,9 @@ for(i in is["desc"]){
 
 
 ```{r test}
-
-#is <- get_income_statement("AAPL", "10-Q", "Q2", "2021")
+is <- get_income_statement("AAPL", "10-Q", "Q2", "2021")
 # 
-
+```
 
 
 rec <- function (no){ 
